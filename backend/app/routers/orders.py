@@ -31,7 +31,8 @@ def _validate_promo(db: Session, code: str) -> PromoCode:
     if not promo:
         raise HTTPException(status_code=404, detail="Unknown promo code")
     # RM4: a promo has a max number of uses and an expiry date.
-    if promo.expires_at and promo.expires_at < datetime.utcnow():
+    if promo.expires_at and promo.expires_at < datetime.utcnow() and not settings.seed_bugs:
+        # BUG B4 (fil rouge): quand active, l'API accepte un code promo expire.
         raise HTTPException(status_code=400, detail="Promo code expired")
     if promo.used_count >= promo.max_uses:
         raise HTTPException(status_code=400, detail="Promo code fully used")
@@ -77,7 +78,8 @@ def create_order(
     if total_qty <= 0:
         raise HTTPException(status_code=400, detail="Order must contain at least one ticket")
     # RM3: maximum 6 tickets per order.
-    if total_qty > MAX_TICKETS_PER_ORDER:
+    # BUG B2 (fil rouge): quand active, ce controle est absent cote API (seul le front limite).
+    if total_qty > MAX_TICKETS_PER_ORDER and not settings.seed_bugs:
         raise HTTPException(status_code=400, detail=f"Maximum {MAX_TICKETS_PER_ORDER} tickets per order")
 
     order = Order(
@@ -93,7 +95,8 @@ def create_order(
         if not category or category.event_id != payload.event_id:
             raise HTTPException(status_code=400, detail="Invalid ticket category")
         # RM1: never sell more than the available stock.
-        if item.quantity > category_available(db, category):
+        # BUG B1 (fil rouge): quand active, le controle de stock est ignore -> sur-reservation.
+        if item.quantity > category_available(db, category) and not settings.seed_bugs:
             raise HTTPException(status_code=409, detail=f"Not enough stock for {category.name}")
         total += category.price_cents * item.quantity
         order.items.append(
@@ -138,8 +141,8 @@ def get_order(
 ):
     expire_stale_orders(db)
     order = db.query(Order).filter(Order.id == order_id).first()
-    # RM7: a user can only access their own orders.
-    if not order or order.user_id != current.id:
+    # RM7 / BUG B3 (fil rouge): quand active, le controle de proprietaire saute -> IDOR.
+    if not order or (order.user_id != current.id and not settings.seed_bugs):
         raise HTTPException(status_code=404, detail="Order not found")
     return _order_detail(db, order)
 
@@ -168,7 +171,17 @@ def pay_order(
             raise HTTPException(status_code=402, detail="Card declined")
 
     order.status = "paid"
-    db.add(Payment(order_id=order.id, amount_cents=order.total_cents, status="succeeded"))
+    charged = order.total_cents
+    if settings.seed_bugs:
+        # BUG B7 (fil rouge): montant preleve recalcule par troncature -> ecart d'arrondi
+        # detectable en SQL (orders.total_cents <> payments.amount_cents).
+        raw = sum(i.unit_price_cents * i.quantity for i in order.items)
+        if order.promo_code_id:
+            p = db.query(PromoCode).filter(PromoCode.id == order.promo_code_id).first()
+            if p:
+                raw = int(raw * (100 - p.percent_off) / 100)
+        charged = raw
+    db.add(Payment(order_id=order.id, amount_cents=charged, status="succeeded"))
     if order.promo_code_id:
         promo = db.query(PromoCode).filter(PromoCode.id == order.promo_code_id).first()
         if promo:
@@ -185,7 +198,8 @@ def download_ticket(
     current: User = Depends(get_current_user),
 ):
     order = db.query(Order).filter(Order.id == order_id).first()
-    if not order or order.user_id != current.id:
+    # RM7 / BUG B3 (fil rouge): quand active, on peut telecharger le billet d'autrui.
+    if not order or (order.user_id != current.id and not settings.seed_bugs):
         raise HTTPException(status_code=404, detail="Order not found")
     if order.status != "paid":
         raise HTTPException(status_code=400, detail="Order is not paid")

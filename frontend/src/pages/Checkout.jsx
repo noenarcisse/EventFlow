@@ -34,12 +34,14 @@ export default function Checkout() {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [bugMode, setBugMode] = useState(false);
   const loaded = useRef(false);
 
   useEffect(() => {
     api.get(`/api/orders/${orderId}`)
       .then((r) => { setOrder(r.data); loaded.current = true; })
       .catch((e) => setLoadErr(errMessage(e, "Commande introuvable.")));
+    api.get("/api/config").then((r) => setBugMode(Boolean(r.data?.seed_bugs))).catch(() => {});
   }, [orderId]);
 
   const left = useCountdown(order?.expires_at);
@@ -60,6 +62,9 @@ export default function Checkout() {
 
   const pay = async (e) => {
     e.preventDefault();
+    // BUG B12 (fil rouge): quand le mode bug est actif, le clic de paiement est
+    // parfois ignore (bouton "parfois inactif") -> cible ideale pour tester le flaky.
+    if (bugMode && Math.random() < 0.35) return;
     setError("");
     const [mm, yy] = exp.split("/");
     if (!mm || !yy) { setError("Date d'expiration invalide."); return; }

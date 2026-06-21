@@ -261,7 +261,13 @@ Typographie : Clash Display (titres) et Inter (interface). Iconographie : FontAw
 
 eventflow est le fil rouge de la formation Testeur QA. Le même produit est testé sous des angles de plus en plus techniques, module après module : SQL de validation, test manuel, gestion de campagne, test d'API, sécurité, performance, automatisation UI et CI/CD.
 
-La variable `SEED_BUGS` (désactivée par défaut) servira à injecter des anomalies intentionnelles (B1 à B12), chacune rattachée au module qui la révèle. Le squelette actuel implémente le comportement correct, qui sert de référence avant l'introduction des bugs.
+La variable `SEED_BUGS` (désactivée par défaut) injecte des anomalies intentionnelles, chacune rattachée au module qui la révèle. Le comportement correct sert de référence ; `SEED_BUGS=true` bascule l'application en mode bugué.
+
+```bash
+SEED_BUGS=true docker compose up --build backend
+```
+
+Bugs déjà disponibles : B1 (sur-réservation), B2 (plafond de billets contournable), B3 (IDOR), B4 (code promo expiré accepté), B5 (stock non libéré), B7 (écart d'arrondi), B9 (JWT sans expiration), B10 (injection SQL), B11 (réponse non conforme), B12 (bouton de paiement instable). Le détail et la reproduction de chacun se trouvent dans `docs/FIL_ROUGE_BUGS.md`. L'endpoint `GET /api/config` expose l'état du mode bug.
 
 ## Structure du dépôt
 

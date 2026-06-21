@@ -1,7 +1,12 @@
+from datetime import timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from ..config import settings
 
 from ..database import get_db
 from ..models import Event
@@ -17,6 +22,29 @@ def list_events(
     city: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
+    if settings.seed_bugs:
+        # BUG B10 (fil rouge): recherche construite par concatenation -> injection SQL,
+        # et le filtre "published" saute (les brouillons fuient).
+        if q:
+            events = (
+                db.query(Event)
+                .filter(text(f"title LIKE '%{q}%'"))
+                .order_by(Event.starts_at)
+                .all()
+            )
+        else:
+            events = db.query(Event).order_by(Event.starts_at).all()
+        # BUG B11 (fil rouge): la reponse omet le champ "capacity" (non conforme au schema).
+        data = []
+        for e in events:
+            data.append({
+                "id": e.id, "title": e.title, "description": e.description or "",
+                "city": e.city, "venue": e.venue or "",
+                "starts_at": e.starts_at.replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z"),
+                "status": e.status, "cover_color": e.cover_color,
+            })
+        return JSONResponse(content=data)
+
     query = db.query(Event).filter(Event.status == "published")
     if city:
         query = query.filter(Event.city == city)

@@ -21,6 +21,7 @@ services:
       DATABASE_URL: postgresql+psycopg2://eventflow:eventflow@db:5432/eventflow
       JWT_SECRET: dev-secret-change-me
       CORS_ORIGINS: http://localhost:5173
+      SEED_BUGS: ${SEED_BUGS:-false}
     command: sh -c "python -m app.seed && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - ./backend/app:/code/app

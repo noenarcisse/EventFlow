@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from .config import settings
 from .models import Order, OrderItem, TicketCategory
 
 MAX_TICKETS_PER_ORDER = 6  # RM3
@@ -11,6 +12,9 @@ MAX_TICKETS_PER_ORDER = 6  # RM3
 
 def expire_stale_orders(db: Session) -> None:
     """RM2: a pending order older than its expiry releases the stock."""
+    if settings.seed_bugs:
+        # BUG B5 (fil rouge): les reservations expirees ne sont pas liberees.
+        return
     now = datetime.utcnow()
     stale = (
         db.query(Order)
@@ -26,14 +30,16 @@ def expire_stale_orders(db: Session) -> None:
 def category_sold(db: Session, category_id: int) -> int:
     """Tickets that count against the quota: paid orders + live pending orders."""
     now = datetime.utcnow()
+    if settings.seed_bugs:
+        # BUG B5 (fil rouge): toute reservation pending bloque le stock, meme expiree.
+        live = (Order.status == "paid") | (Order.status == "pending")
+    else:
+        live = (Order.status == "paid") | ((Order.status == "pending") & (Order.expires_at > now))
     q = (
         db.query(func.coalesce(func.sum(OrderItem.quantity), 0))
         .join(Order, Order.id == OrderItem.order_id)
         .filter(OrderItem.category_id == category_id)
-        .filter(
-            (Order.status == "paid")
-            | ((Order.status == "pending") & (Order.expires_at > now))
-        )
+        .filter(live)
     )
     return int(q.scalar() or 0)
 

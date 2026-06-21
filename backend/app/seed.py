@@ -48,7 +48,7 @@ def run():
         cats = []
         for ev in events:
             cats.append(TicketCategory(event_id=ev.id, name="Early bird",
-                        price_cents=int(ev.capacity and 2500), quota=max(10, ev.capacity // 5)))
+                        price_cents=2495, quota=max(10, ev.capacity // 5)))
             cats.append(TicketCategory(event_id=ev.id, name="Plein tarif",
                         price_cents=3500, quota=max(20, ev.capacity // 2)))
             cats.append(TicketCategory(event_id=ev.id, name="VIP",

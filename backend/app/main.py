@@ -46,3 +46,9 @@ app.include_router(admin.router)
 @app.get("/api/health")
 def health():
     return {"status": "ok", "service": "eventflow-api"}
+
+
+@app.get("/api/config")
+def config():
+    # Expose l'etat du fil rouge pour permettre au front d'adapter son comportement (B12).
+    return {"seed_bugs": settings.seed_bugs}

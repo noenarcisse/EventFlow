@@ -27,8 +27,10 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def create_access_token(subject: str) -> str:
-    expire = datetime.utcnow() + timedelta(minutes=settings.access_token_minutes)
-    payload = {"sub": subject, "exp": expire}
+    payload = {"sub": subject}
+    if not settings.seed_bugs:
+        payload["exp"] = datetime.utcnow() + timedelta(minutes=settings.access_token_minutes)
+    # BUG B9 (fil rouge): quand active, le jeton est emis sans date d'expiration.
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
