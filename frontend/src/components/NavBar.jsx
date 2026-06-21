@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import Logo from "./Logo";
+import Avatar from "./Avatar";
 import { useAuth } from "../auth";
 
 export default function NavBar() {
@@ -20,9 +21,9 @@ export default function NavBar() {
         )}
         {user ? (
           <>
-            <span className="muted" style={{ fontSize: 14 }}>
-              <i className="fa-regular fa-circle-user" /> {user.full_name || user.email}
-            </span>
+            <Link to="/profile" className="link" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Avatar user={user} size={30} /> {user.full_name || user.email}
+            </Link>
             <button className="btn btn-ghost btn-sm" onClick={() => { logout(); nav("/"); }}>
               Deconnexion
             </button>

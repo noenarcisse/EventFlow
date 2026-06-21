@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ..auth import create_access_token, get_current_user, hash_password, verify_password
 from ..database import get_db
 from ..models import User
-from ..schemas import Token, UserCreate, UserOut
+from ..schemas import AvatarUpdate, PasswordChange, ProfileUpdate, Token, UserCreate, UserOut
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -36,3 +36,64 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 @router.get("/me", response_model=UserOut)
 def me(current: User = Depends(get_current_user)):
     return current
+
+
+MAX_AVATAR_CHARS = 2_000_000  # ~1.5 MB en base64
+
+
+@router.patch("/me", response_model=UserOut)
+def update_profile(
+    payload: ProfileUpdate,
+    db: Session = Depends(get_db),
+    current: User = Depends(get_current_user),
+):
+    data = payload.model_dump(exclude_unset=True)
+    # L'email et le role ne sont volontairement pas modifiables ici.
+    for field in ("full_name", "phone"):
+        if field in data and data[field] is not None:
+            setattr(current, field, data[field])
+    db.commit()
+    db.refresh(current)
+    return current
+
+
+@router.post("/me/avatar", response_model=UserOut)
+def update_avatar(
+    payload: AvatarUpdate,
+    db: Session = Depends(get_db),
+    current: User = Depends(get_current_user),
+):
+    avatar = payload.avatar.strip()
+    if not avatar.startswith("data:image/"):
+        raise HTTPException(status_code=400, detail="Image invalide (format data URL attendu)")
+    if len(avatar) > MAX_AVATAR_CHARS:
+        raise HTTPException(status_code=413, detail="Image trop volumineuse (max ~1.5 Mo)")
+    current.avatar = avatar
+    db.commit()
+    db.refresh(current)
+    return current
+
+
+@router.delete("/me/avatar", response_model=UserOut)
+def remove_avatar(
+    db: Session = Depends(get_db),
+    current: User = Depends(get_current_user),
+):
+    current.avatar = None
+    db.commit()
+    db.refresh(current)
+    return current
+
+
+@router.post("/change-password", status_code=204)
+def change_password(
+    payload: PasswordChange,
+    db: Session = Depends(get_db),
+    current: User = Depends(get_current_user),
+):
+    if not verify_password(payload.current_password, current.password_hash):
+        raise HTTPException(status_code=400, detail="Mot de passe actuel incorrect")
+    if len(payload.new_password) < 8:
+        raise HTTPException(status_code=400, detail="Le nouveau mot de passe doit faire au moins 8 caracteres")
+    current.password_hash = hash_password(payload.new_password)
+    db.commit()

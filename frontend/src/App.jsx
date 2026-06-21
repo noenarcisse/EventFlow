@@ -5,6 +5,7 @@ import Catalog from "./pages/Catalog";
 import EventDetail from "./pages/EventDetail";
 import Login from "./pages/Login";
 import MyTickets from "./pages/MyTickets";
+import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/admin/events/:id/edit" element={<Staff><AdminEventForm /></Staff>} />
         <Route path="/admin/promos" element={<Staff><AdminPromos /></Staff>} />
         <Route path="/tickets" element={<Protected><MyTickets /></Protected>} />
+        <Route path="/profile" element={<Protected><Profile /></Protected>} />
       </Routes>
     </>
   );

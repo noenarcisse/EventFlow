@@ -36,8 +36,15 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  const updateUser = (u) => setUser(u);
+  const refresh = async () => {
+    const me = await api.get("/api/auth/me");
+    setUser(me.data);
+    return me.data;
+  };
+
   return (
-    <AuthCtx.Provider value={{ user, ready, login, register, logout }}>
+    <AuthCtx.Provider value={{ user, ready, login, register, logout, updateUser, refresh }}>
       {children}
     </AuthCtx.Provider>
   );

@@ -15,6 +15,8 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=False, default="")
     role = Column(String(20), nullable=False, default="client")  # client|organizer|admin
+    phone = Column(String(40), nullable=True)
+    avatar = Column(Text, nullable=True)  # data URL (image)
     created_at = Column(DateTime, server_default=func.now())
 
     orders = relationship("Order", back_populates="user")

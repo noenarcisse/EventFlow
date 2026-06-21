@@ -26,6 +26,8 @@ class UserOut(BaseModel):
     email: str
     full_name: str
     role: str
+    phone: Optional[str] = None
+    avatar: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -232,3 +234,17 @@ class PromoUpdate(BaseModel):
     percent_off: Optional[int] = None
     max_uses: Optional[int] = None
     expires_at: Optional[datetime] = None
+
+
+class ProfileUpdate(BaseModel):
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+
+
+class AvatarUpdate(BaseModel):
+    avatar: str
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    new_password: str
