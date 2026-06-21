@@ -42,6 +42,7 @@ Côté public :
 - Tunnel de réservation : sélection des places, réservation temporaire de dix minutes, paiement, confirmation.
 - Codes promo et catégories tarifaires (early bird, plein tarif, VIP).
 - Espace « Mes billets » et billet téléchargeable au format PDF avec QR code.
+- Profil utilisateur : photo (avatar), modification des informations et changement de mot de passe.
 
 Côté back-office (rôles `organizer` et `admin`) :
 
@@ -173,9 +174,13 @@ Authentification :
 
 | Méthode | Route                  | Accès    | Description                       |
 |---------|------------------------|----------|-----------------------------------|
-| POST    | `/api/auth/register`   | Public   | Créer un compte                   |
-| POST    | `/api/auth/token`      | Public   | Connexion (OAuth2, renvoie un JWT) |
-| GET     | `/api/auth/me`         | Connecté | Profil de l'utilisateur courant   |
+| POST    | `/api/auth/register`        | Public   | Créer un compte                   |
+| POST    | `/api/auth/token`           | Public   | Connexion (OAuth2, renvoie un JWT) |
+| GET     | `/api/auth/me`              | Connecté | Profil de l'utilisateur courant   |
+| PATCH   | `/api/auth/me`              | Connecté | Modifier ses informations (nom, téléphone) |
+| POST    | `/api/auth/me/avatar`       | Connecté | Définir la photo de profil        |
+| DELETE  | `/api/auth/me/avatar`       | Connecté | Retirer la photo de profil        |
+| POST    | `/api/auth/change-password` | Connecté | Changer son mot de passe          |
 
 Catalogue et réservations :
 
@@ -231,7 +236,7 @@ Le schéma relationnel de référence est disponible dans `db/schema.sql` (il se
 
 | Table               | Rôle                                                       |
 |---------------------|------------------------------------------------------------|
-| `users`             | Comptes et rôles (`client`, `organizer`, `admin`)          |
+| `users`             | Comptes, rôles (`client`, `organizer`, `admin`), profil (téléphone, avatar) |
 | `events`            | Événements (titre, ville, date, capacité, statut)          |
 | `ticket_categories` | Catégories tarifaires d'un événement (prix, quota)         |
 | `orders`            | Commandes (statut, total, expiration)                      |
@@ -278,9 +283,9 @@ eventflow/
 │   └── requirements.txt
 ├── frontend/                 SPA React (Vite)
 │   ├── src/
-│   │   ├── pages/            Catalog, EventDetail, Checkout, Confirmation, Login, MyTickets
+│   │   ├── pages/            Catalog, EventDetail, Checkout, Confirmation, Login, MyTickets, Profile
 │   │   ├── pages/admin/      Dashboard, EventForm, EventManage, Promos
-│   │   ├── components/       NavBar, EventCard, Logo
+│   │   ├── components/       NavBar, EventCard, Logo, Avatar
 │   │   ├── api.js            client axios et utilitaires
 │   │   ├── auth.jsx          contexte d'authentification
 │   │   └── theme.css         design system eventflow
@@ -298,21 +303,4 @@ Connexion impossible avec une erreur 500 mentionnant un email invalide : les adr
 
 Réservation affichée comme « expirée » dès la page de paiement : signe d'une date interprétée dans le mauvais fuseau. L'API renvoie des dates en UTC explicite (suffixe `Z`) et le frontend les parse comme UTC. Conservez ce contrat si vous ajoutez des dates.
 
-Erreur 500 au démarrage après une mise à jour des dépendances : reconstruisez l'image concernée (`docker compose up --build backend`). Le montage en volume ne réinstalle pas les paquets.
-
-Pour inspecter les journaux d'un service :
-
-```bash
-docker compose logs backend --tail=50
-```
-
-## Feuille de route
-
-- Injection des bugs pédagogiques (B1 à B12) pilotée par `SEED_BUGS`.
-- Page de vérification du QR à l'entrée (contrôle d'accès par le staff).
-- Suite de tests d'exemple (PyTest pour l'API, Playwright pour le tunnel).
-- Règles métier RM5 et RM6 (early bird, remboursement).
-
-## Licence
-
-Projet pédagogique à usage interne de la formation. Aucune licence d'exploitation publique n'est définie à ce stade.
+Colonnes de profil (`phone`, `avatar`) absentes sur une base ancienne : le backend les ajoute automatiquement au démarrage via une migration idempotente (`ALTER TABLE ... ADD COLUMN`). Un redémarrage du 
