@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import api, { euros, fmtDate, errMessage } from "../api";
 import { useAuth } from "../auth";
 

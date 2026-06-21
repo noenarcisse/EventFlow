@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import api, { errMessage } from "../../api";
 
 const empty = { title: "", city: "", venue: "", starts_at: "", capacity: 100, status: "published", cover_color: "#6C4DF6" };

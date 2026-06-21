@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import api, { euros, errMessage, toDate } from "../api";
 
 const TEST_OK = "4242 4242 4242 4242";

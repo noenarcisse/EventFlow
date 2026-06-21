@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
@@ -70,14 +70,14 @@ Le frontend appelle l'API via un proxy `/api` (configuré dans `vite.config.js`)
 | Base de données | PostgreSQL 16                                                       |
 | API             | FastAPI, SQLAlchemy 2, Pydantic 2, OAuth2 / JWT (python-jose), bcrypt |
 | Billet PDF      | reportlab, qrcode                                                   |
-| Frontend        | React 18, Vite 5, React Router, axios                              |
+| Frontend        | React 19, Vite 8, React Router 8, axios                            |
 | Design          | Clash Display, Inter, FontAwesome                                  |
 | Conteneurisation | Docker, Docker Compose                                             |
 
 ## Prérequis
 
 - Docker et Docker Compose (méthode recommandée), ou
-- Python 3.12 et Node.js 20 pour un démarrage manuel.
+- Python 3.12 et Node.js 22 pour un démarrage manuel.
 
 ## Démarrage rapide (Docker)
 
