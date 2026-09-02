@@ -96,4 +96,31 @@ describe("Testing of the Event card component", () => {
         });
         expect(card).toHaveAttribute("href", "/events/42");
     });
+
+    test('D2 EventCard par titre" ', async () => {
+        const card = await screen.findByRole("heading", {
+            name: "Brussels Testing Days",
+            level: 3,
+        });
+        expect(card).toBeInTheDocument();
+    });
+
+    test('D3 Count the links" ', async () => {
+        const mock2 = {
+            id: 42,
+            cover_color: "red",
+            starts_at: new Date(),
+            title: "Namur QA Night",
+            city: "Bruxelles",
+            venue: "Tour & Taxis",
+        };
+        render(
+            <MemoryRouter initialEntries={["/events/42"]}>
+                <EventCard ev={mock2}></EventCard>
+            </MemoryRouter>,
+        );
+
+        const cards = await screen.findAllByRole("link");
+        expect(cards.length).toEqual(2);
+    });
 });

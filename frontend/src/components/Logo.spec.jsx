@@ -33,4 +33,11 @@ describe("Testing of the Logo component", () => {
         expect(logo).toHaveAttribute("width", "18");
         expect(logo).toHaveAttribute("height", "18");
     });
+
+    test("D1 Logo queried by label", () => {
+        render(<Logo size={18}></Logo>);
+        const logo = screen.getByLabelText("eventflow");
+        expect(logo).toBeInTheDocument();
+        // Testez aussi mentalement cette question : le SVG possède-t-il automatiquement le rôle img ? -> non
+    });
 });

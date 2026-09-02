@@ -34,4 +34,28 @@ describe("Testing of the Avatar component", () => {
         expect(avat).toBeInTheDocument();
         expect(avat).toHaveAttribute("src", "/jarjarbinks.jpeg");
     });
+
+    test("C8 Avatar is an image if there is an url", () => {
+        //  Écrivez deux tests séparés :
+        // un utilisateur avec avatar affiche une image ;
+        // un utilisateur sans avatar affiche ses initiales.
+        // Choisissez vous-même les queries permettant de distinguer les deux branches.
+
+        render(<Avatar user={{ avatar: "/jarjarbinks.jpeg" }}></Avatar>);
+        render(<Avatar user={{ full_name: "Jarjar Binks" }}></Avatar>);
+
+        const avat = screen.getByRole("img");
+        const avat2 = screen.getByText("JB");
+        expect(avat).toBeInTheDocument();
+        expect(avat).toHaveAttribute("src", "/jarjarbinks.jpeg");
+
+        expect(avat2).toBeInTheDocument();
+    });
+
+    test("D4 Avatar is not in the document", () => {
+        render(<Avatar user={{ full_name: "Jarjar Binks" }}></Avatar>);
+
+        const avat = screen.queryByRole("img");
+        expect(avat).toBeNull();
+    });
 });
