@@ -21,36 +21,36 @@ describe("Testing of the Event card component", () => {
         );
     });
 
-    test("B7_Event card is rendered in the page", () => {
+    test("B7 Event card is rendered in the page", () => {
         const card = screen.getByText("Brussels Testing Days");
         expect(card).toBeInTheDocument();
     });
 
-    test("B8_Event card appears with the right city", () => {
+    test("B8 Event card appears with the right city", () => {
         const card = screen.getByText("Bruxelles");
         const expectedCity = "Bruxelles";
 
         expect(card).toHaveTextContent(expectedCity);
     });
 
-    test("B9_Event card shows the proper venue", () => {
+    test("B9 Event card shows the proper venue", () => {
         const card = screen.getByText("Tour & Taxis");
         const expectedLocation = "Tour & Taxis";
 
         expect(card).toHaveTextContent(expectedLocation);
     });
 
-    test("B10_Event card has a link", () => {
+    test("B10 Event card has a link", () => {
         const cards = screen.getByRole("link");
         expect(cards).toBeInTheDocument();
     });
 
-    test("B11_Event card has the correct link", async () => {
+    test("B11 Event card has the correct link", async () => {
         const cards = await screen.findByRole("link");
         expect(cards).toHaveAttribute("href", "/events/7");
     });
 
-    test('B12_Event card has static texts "Billets" & "Voir" ', () => {
+    test('B12 Event card has static texts "Billets" & "Voir" ', () => {
         const b = screen.getByText("Billets");
         const v = screen.getByText("Voir");
 
