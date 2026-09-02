@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { getByText, render, screen } from "@testing-library/react";
 import EventCard from "./EventCard";
 import { MemoryRouter } from "react-router";
 
@@ -56,5 +56,44 @@ describe("Testing of the Event card component", () => {
 
         expect(b).toBeInTheDocument();
         expect(v).toBeInTheDocument();
+    });
+
+    test('C6 Event card has a new title if modified" ', () => {
+        const mock2 = {
+            id: 42,
+            cover_color: "red",
+            starts_at: new Date(),
+            title: "Namur QA Night",
+            city: "Bruxelles",
+            venue: "Tour & Taxis",
+        };
+        render(
+            <MemoryRouter initialEntries={["/events/42"]}>
+                <EventCard ev={mock2}></EventCard>
+            </MemoryRouter>,
+        );
+        const card = screen.getByText("Namur QA Night");
+        expect(card).toBeInTheDocument();
+    });
+
+    test('C7 Event card has a new link if id is modified" ', async () => {
+        const mock2 = {
+            id: 42,
+            cover_color: "red",
+            starts_at: new Date(),
+            title: "Namur QA Night",
+            city: "Bruxelles",
+            venue: "Tour & Taxis",
+        };
+        render(
+            <MemoryRouter initialEntries={["/events/42"]}>
+                <EventCard ev={mock2}></EventCard>
+            </MemoryRouter>,
+        );
+
+        const card = await screen.findByRole("link", {
+            name: /Namur QA Night/,
+        });
+        expect(card).toHaveAttribute("href", "/events/42");
     });
 });

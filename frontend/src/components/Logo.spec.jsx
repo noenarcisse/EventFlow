@@ -20,4 +20,17 @@ describe("Testing of the Logo component", () => {
         const logo = screen.getByLabelText("eventflow");
         expect(logo).toHaveAttribute("width", "34");
     });
+
+    test("C1 Logo is size 60", () => {
+        render(<Logo size={60}></Logo>);
+        const logo = screen.getByLabelText("eventflow");
+        expect(logo).toHaveAttribute("width", "60");
+        expect(logo).toHaveAttribute("height", "60");
+    });
+    test("C2 Logo is size 18", () => {
+        render(<Logo size={18}></Logo>);
+        const logo = screen.getByLabelText("eventflow");
+        expect(logo).toHaveAttribute("width", "18");
+        expect(logo).toHaveAttribute("height", "18");
+    });
 });
