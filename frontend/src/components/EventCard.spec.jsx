@@ -5,31 +5,56 @@ import { MemoryRouter } from "react-router";
 
 describe("Testing of the Event card component", () => {
     const mock = {
-        id: 42,
+        id: 7,
         cover_color: "red",
         starts_at: new Date(),
-        title: "Concert de Manau",
+        title: "Brussels Testing Days",
         city: "Bruxelles",
-        venue: "Ancienne Belgique",
+        venue: "Tour & Taxis",
     };
 
     beforeEach(() => {
         render(
-            <MemoryRouter initialEntries={["/events/42"]}>
+            <MemoryRouter initialEntries={["/events/7"]}>
                 <EventCard ev={mock}></EventCard>
             </MemoryRouter>,
         );
     });
 
     test("B7_Event card is rendered in the page", () => {
-        const card = screen.getByText("Concert de Manau");
+        const card = screen.getByText("Brussels Testing Days");
         expect(card).toBeInTheDocument();
     });
 
-    test("B8_Event card shows the correct title", () => {
-        const card = screen.getByText("Concert de Manau");
-        const expectedTitle = "Concert de Manau";
+    test("B8_Event card appears with the right city", () => {
+        const card = screen.getByText("Bruxelles");
+        const expectedCity = "Bruxelles";
 
-        expect(card).toHaveTextContent(expectedTitle);
+        expect(card).toHaveTextContent(expectedCity);
+    });
+
+    test("B9_Event card shows the proper venue", () => {
+        const card = screen.getByText("Tour & Taxis");
+        const expectedLocation = "Tour & Taxis";
+
+        expect(card).toHaveTextContent(expectedLocation);
+    });
+
+    test("B10_Event card has a link", () => {
+        const cards = screen.getByRole("link");
+        expect(cards).toBeInTheDocument();
+    });
+
+    test("B11_Event card has the correct link", async () => {
+        const cards = await screen.findByRole("link");
+        expect(cards).toHaveAttribute("href", "/events/7");
+    });
+
+    test('B12_Event card has static texts "Billets" & "Voir" ', () => {
+        const b = screen.getByText("Billets");
+        const v = screen.getByText("Voir");
+
+        expect(b).toBeInTheDocument();
+        expect(v).toBeInTheDocument();
     });
 });
