@@ -1,0 +1,14 @@
+info:
+  name: Users
+  type: http
+
+http:
+  method: GET
+  url: https://dummyjson.com/users
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

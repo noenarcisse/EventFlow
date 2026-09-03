@@ -1,0 +1,39 @@
+info:
+  name: Créer utilisateur
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/users/add"
+  body:
+    type: json
+    data: |-
+      {
+        "firstName": "Bruno",
+        "lastName":"Postman",
+        "age": 35
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const user = res.getBody()
+        const newUserId = res.getBody().id
+        console.log(newUserId)
+
+        bru.setVar("userId", newUserId)
+        bru.setVar("userData", {firstName : user.firstName, lastName : user.lastName, age : user.age})
+
+        console.log("C'est bon on a stocké ca : "+ bru.getVar("userId"))
+
+        console.log("Bruno postman ?")
+        console.log(bru.getVar("userData"))
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

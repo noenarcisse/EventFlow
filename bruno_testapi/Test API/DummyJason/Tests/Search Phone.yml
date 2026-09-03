@@ -1,0 +1,23 @@
+info:
+  name: Search Phone
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: https://dummyjson.com/products/search?q=phone&limit=2
+  params:
+    - name: q
+      value: phone
+      type: query
+    - name: limit
+      value: "2"
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+​

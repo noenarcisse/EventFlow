@@ -1,0 +1,31 @@
+info:
+  name: Add cart
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://dummyjson.com/carts/add
+  body:
+    type: json
+    data: |-
+      {
+        "userId": 1,
+        "products": [
+          {
+            "id": 144,
+            "quantity": 4
+          },
+          {
+            "id": 98,
+            "quantity": 1
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
