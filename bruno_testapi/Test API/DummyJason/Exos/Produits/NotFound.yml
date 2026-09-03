@@ -1,0 +1,25 @@
+info:
+  name: NotFound
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrl}}/products/99999"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "404"
+    - expression: res.body.message
+      operator: contains
+      value: not found
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

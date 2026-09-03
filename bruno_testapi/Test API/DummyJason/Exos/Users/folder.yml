@@ -1,6 +1,4 @@
 info:
   name: Users
   type: folder
-  seq: 1
-
-request: {}
+  seq: 2

@@ -1,0 +1,32 @@
+info:
+  name: PaginationProducts
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{baseUrl}}/products?limit=10&skip=5"
+  params:
+    - name: limit
+      value: "10"
+      type: query
+    - name: skip
+      value: "5"
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.limit
+      operator: eq
+      value: "10"
+    - expression: res.body.products.length
+      operator: lte
+      value: "10"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

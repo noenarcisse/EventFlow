@@ -1,7 +1,7 @@
 info:
-  name: All Products
+  name: AllProducts
   type: http
-  seq: 1
+  seq: 11
 
 http:
   method: GET
@@ -23,4 +23,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-​
+  forwardAuthorizationHeader: false

@@ -1,0 +1,45 @@
+info:
+  name: UserOne
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{baseUrl}}/users/1"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        let d = res.getBody()
+        if(typeof d.id !== 'number' || !d.email.includes("@")) {
+          throw new Error("Validation échouée")
+        }
+
+        if(typeof d.id === 'number' &&  d.email.includes("@")) console.log("Bien joué")
+
+        test("id est un nombre", () => {
+          const isnum = typeof d.id === "number"
+          expect(isnum).to.be.true
+        })
+
+        const reg = /\+[0-9]{9}/
+        d.phone
+  assertions:
+    - expression: res.body.firstName
+      operator: eq
+      value: Terry
+    - expression: res.body.role
+      operator: contains
+      value: admin
+    - expression: res.body.role
+      operator: contains
+      value: user
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
