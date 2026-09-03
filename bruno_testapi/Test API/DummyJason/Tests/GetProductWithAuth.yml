@@ -1,12 +1,10 @@
 info:
-  name: Lister les produits
+  name: GetProductWithAuth
   type: http
 
 http:
   method: GET
-  url: |-
-    https://
-    dummyjson.com/products
+  url: "{{baseUrl}}/auth/product/1"
   auth: inherit
 
 settings:

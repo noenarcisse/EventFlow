@@ -15,6 +15,15 @@ http:
       }
   auth: inherit
 
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const token = res.getBody().accessToken
+        bru.setVar("token", token)
+
+        console.log(bru.getVar("token"))
+
 settings:
   encodeUrl: true
   timeout: 0

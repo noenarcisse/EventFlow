@@ -8,8 +8,19 @@ http:
   url: https://dummyjson.com/products
   auth: inherit
 
+runtime:
+  scripts:
+    - type: after-response
+      code: console.log(res.getStatus())
+    - type: tests
+      code: |-
+        test("status is 200", () => {
+          expect(res.getStatus()).to.equal(200)
+        })
+
 settings:
   encodeUrl: true
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+​
