@@ -1,0 +1,69 @@
+info:
+  name: ConnectAsEmily
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: https://dummyjson.com/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "username": "emilys",
+        "password": "emilyspass",
+        "expiresInMins": 60
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        // let jwt = null
+        if (res.status === 200){
+          
+          const token = res.getBody().accessToken
+          const tokenType = typeof token
+          
+          test("token is not null | undef", () => {
+            expect(token).to.be.not.undefined
+            expect(token).to.be.not.null
+          })
+          test("token type is String", () => {
+            expect(tokenType).eq("string")
+          })
+          
+            if(res.getBody().accessToken !== undefined || res.getBody().accessToken !== null ){
+              if(typeof res.getBody() === "string")
+              jwt = res.getBody().accessToken
+              bru.setVar("jwt", jwt)
+          }
+        }
+
+
+        else console.log("C'est la merdasse vostre seigneurie")
+        console.log(jwt ? jwt : "Rien")
+
+        test("JWT is properly stolen", () => {
+          expect(bru.getVar("jwt")).to.not.be.undefined
+        })
+  assertions:
+    - expression: accessToken
+      operator: isDefined
+  actions:
+    - type: set-variable
+      phase: after-response
+      selector:
+        expression: res.body.accessToken
+        method: jsonq
+      variable:
+        name: jwt
+        scope: runtime
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

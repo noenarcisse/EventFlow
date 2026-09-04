@@ -1,0 +1,76 @@
+info:
+  name: DecodeJWT
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: https://dummyjson.com/auth/login
+  body:
+    type: json
+    data: |-
+      {
+        "username": "emilys",
+        "password": "emilyspass",
+        "expiresInMins": 60
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        if (res.status === 200){
+          
+          const token = res.getBody().accessToken
+          const tokenType = typeof token
+          
+          test("token is not null | undef", () => {
+            expect(token).to.be.not.undefined
+            expect(token).to.be.not.null
+          })
+          test("token type is String", () => {
+        //     expect(tokenType).eq("string")
+            expect(token).to.be.a("string")
+          })
+          
+            if(res.getBody().accessToken !== undefined || res.getBody().accessToken !== null ){
+              if(typeof res.getBody() === "string"){
+                  console.log( res.getBody().accessToken)
+                  bru.setVar("jwt", res.getBody().accessToken) 
+                }
+          }
+        }
+        else console.log("C'est la merdasse vostre seigneurie")
+
+
+        let jwt = bru.getVar("jwt")
+        if(jwt === null) throw new Error("JWT est null")
+        console.log(jwt ? jwt : "Rien")
+
+        const jwtParts = jwt.split(".")
+        if(jwtParts.length < 3) throw new Error("C'est un non")
+
+        const truc = atob(jwtParts[1])
+        console.log(truc)
+        const jason = JSON.parse(truc)
+        const username = jason.username
+        console.log(username)
+
+        test("Username is emilys", () => {
+          expect(username.toLowerCase()).to.eq("emilys")
+        })
+
+        test("JWT is properly stolen", () => {
+          expect(bru.getVar("jwt")).to.not.be.undefined
+        })
+  assertions:
+    - expression: accessToken
+      operator: isDefined
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

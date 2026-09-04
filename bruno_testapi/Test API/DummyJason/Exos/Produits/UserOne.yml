@@ -24,8 +24,12 @@ runtime:
           expect(isnum).to.be.true
         })
 
-        const reg = /\+[0-9]{9}/
-        d.phone
+        // if (reg.test(d.phone)) console.log("Le numéro de tel est niquel chrome")
+        test("numéro de tel valid", () => {
+          const reg = /^\+?[\d\s-]{3,20}$/
+          const isvalid = reg.test(d.phone)
+          expect(isvalid).to.be.true
+        })
   assertions:
     - expression: res.body.firstName
       operator: eq

@@ -2,3 +2,5 @@ name: Dev
 variables:
   - name: baseUrl
     value: https://dummyjson.com
+  - name: jwt
+    value: ""
