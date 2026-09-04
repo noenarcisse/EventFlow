@@ -11,8 +11,7 @@ http:
     data: |-
       {
         "username": "emilys",
-        "password": "emilyspass",
-        "expiresInMins": 60
+        "password": "emilyspass"
       }
   auth: inherit
 
@@ -35,7 +34,7 @@ runtime:
           })
           
             if(res.getBody().accessToken !== undefined || res.getBody().accessToken !== null ){
-              if(typeof res.getBody() === "string"){
+              if(typeof res.getBody().accessToken === "string"){
                   console.log( res.getBody().accessToken)
                   bru.setVar("jwt", res.getBody().accessToken) 
                 }
@@ -43,10 +42,8 @@ runtime:
         }
         else console.log("C'est la merdasse vostre seigneurie")
 
-
         let jwt = bru.getVar("jwt")
         if(jwt === null) throw new Error("JWT est null")
-        console.log(jwt ? jwt : "Rien")
 
         const jwtParts = jwt.split(".")
         if(jwtParts.length < 3) throw new Error("C'est un non")

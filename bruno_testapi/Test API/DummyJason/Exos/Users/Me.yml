@@ -6,9 +6,26 @@ info:
 http:
   method: GET
   url: "{{baseUrl}}/auth/me"
-  auth:
-    type: bearer
-    token: "{{jwt}}"
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        test("code 200", () => {
+          expect(res.status).to.eq(200)
+        })
+
+        test("prenom is emily", () => {
+          expect(res.getBody().firstName).to.eq("Emily")
+        })
+
+        test("@ char in email", () => {
+          expect(res.getBody().email).to.contains("@")
+        })
+
+        test("role is not empty", () => {
+          expect(res.getBody().role).to.not.be.empty
+        })
 
 settings:
   encodeUrl: true
