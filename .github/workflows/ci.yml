@@ -52,7 +52,7 @@ jobs:
 
       - name: Tests back-office Selenium
         working-directory: qa
-        run: pytest tests/ui/selenium_backoffice --alluredir=reports/allure-results
+        run: pytest tests/ui/selenium_backoffice --alluredir=reports/allure-results --output reports/selenium
         continue-on-error: true
 
       - name: Rapport Allure
