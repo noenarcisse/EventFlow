@@ -129,7 +129,7 @@ export default function Checkout() {
             {error && <div className="notice notice-err" style={{ marginBottom: 12 }}>{error}</div>}
 
             <button className="btn btn-primary" style={{ width: "100%" }} disabled={busy || expired}>
-              <i className="fa-solid fa-lock" /> {busy ? "Traitement..." : `Payer ${euros(order.total_cents)}`}
+              <i className="fa-solid fa-lock" aria-hidden="true" /> {busy ? "Traitement..." : `Payer ${euros(order.total_cents)}`}
             </button>
           </form>
 
