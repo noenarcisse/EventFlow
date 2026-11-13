@@ -1,0 +1,11 @@
+line-length = 120
+target-version="py312"
+
+[lint]
+extend-select = ["S", "T20", "PT", "N"]
+ignore = ["S107"]
+
+[lint.per-file-ignores]
+"tests/**" = ["S101","S105"]
+
+[format]
