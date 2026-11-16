@@ -7,7 +7,7 @@ pytestmark = pytest.mark.api
 
 
 @pytest.mark.smoke
-def test_health(anonymous_api):
+def test_healthyFreshYesDeFou(anonymous_api):
     r = anonymous_api.get("/api/health")
     assert r.status_code == 200
     assert r.json()["status"] == "ok"
