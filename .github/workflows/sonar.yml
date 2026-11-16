@@ -1,0 +1,36 @@
+name: SonarQube Cloud
+
+on:
+    push:
+        branches: [eventflow-qa]   # plan Free : branche principale seulement
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+permissions:
+    contents: read
+
+jobs:
+    sonar:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+          with:
+            fetch-depth: 0              # historique complet : blame et nouveau code
+            persist-credentials: false
+        - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+          with:
+            python-version: "3.12"
+
+        - name: Rapports Ruff et Bandit
+          run: |
+            pip install --only-binary :all: ruff==0.17.4 bandit==1.9.4
+            # Module racine (backend) : rapports a la racine
+            ruff check backend/app --exit-zero --output-format json -o ruff-report.json
+            bandit -r backend/app -f json -o bandit-report.json --exit-zero
+            # Module qa (detecte par Sonar) : rapports dans qa/
+            cd qa
+            ruff check . --exit-zero --output-format json -o ruff-report.json
+            bandit -r utils -f json -o bandit-report.json --exit-zero
+        - uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
