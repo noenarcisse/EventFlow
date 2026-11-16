@@ -11,3 +11,5 @@ frontend/.env
 .pytest_cache/
 qa/.venv/
 qa/reports/
+
+.env
