@@ -1,3 +1,9 @@
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=noenarcisse_EventFlow&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=noenarcisse_EventFlow)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=noenarcisse_EventFlow&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=noenarcisse_EventFlow)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=noenarcisse_EventFlow&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=noenarcisse_EventFlow)
+[![Security issues](https://sonarcloud.io/api/project_badges/measure?project=noenarcisse_EventFlow&metric=software_quality_security_issues)](https://sonarcloud.io/summary/new_code?id=noenarcisse_EventFlow)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=noenarcisse_EventFlow&metric=coverage)](https://sonarcloud.io/summary/new_code?id=noenarcisse_EventFlow)
+
 # eventflow
 
 > Plateforme de billetterie événementielle — support pédagogique (fil rouge) de la formation Testeur QA.
