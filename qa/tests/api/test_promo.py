@@ -1,6 +1,7 @@
 import time
 
 import requests
+
 from utils.constants import TIMEOUT
 
 URL = "http://localhost:8000"
