@@ -17,7 +17,7 @@ def create_event(admin: ApiClient, status="published", early_quota=50, full_quot
         "description": "Evenement cree par la suite de tests automatisee",
         "city": "Bruxelles",
         "venue": "Salle QA",
-        "starts_at": (datetime.datetime.now(tz=timezone.utc) + timedelta(days=45)).isoformat(),
+        "starts_at": (datetime.now(tz=timezone.utc) + timedelta(days=45)).isoformat(),
         "capacity": early_quota + full_quota + vip_quota,
         "status": status,
         "categories": [
