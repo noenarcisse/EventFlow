@@ -1,5 +1,6 @@
 """Petit client HTTP pour l'API EventFlow."""
 import requests
+from qa.utils.constants import TIMEOUT
 
 from utils.config import API_URL
 
@@ -19,7 +20,7 @@ class ApiClient:
         r = requests.post(
             f"{self.base_url}/api/auth/token",
             data={"username": email, "password": password},
-            verify=False,
+            timeout=TIMEOUT
         )
         if r.status_code == 200:
             self.set_token(r.json()["access_token"])
