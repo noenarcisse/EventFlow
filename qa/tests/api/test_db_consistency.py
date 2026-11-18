@@ -1,6 +1,5 @@
 """Controles de coherence directement en base (necessite le PostgreSQL du docker compose)."""
-from datetime import datetime, timedelta
-from time import timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
