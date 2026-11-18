@@ -1,7 +1,7 @@
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from utils import config
@@ -21,13 +21,13 @@ class BasePage:
 
     # --- primitives -----------------------------------------------------
     def find(self, locator):
-        return self.wait.until(EC.visibility_of_element_located(locator))
+        return self.wait.until(ec.visibility_of_element_located(locator))
 
     def find_all(self, locator):
         return self.driver.find_elements(*locator)
 
     def click(self, locator):
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+        self.wait.until(ec.element_to_be_clickable(locator)).click()
 
     def type(self, locator, text):
         """Les champs React sont 'controles' : clear() ne met pas l'etat a jour,
@@ -64,7 +64,7 @@ class BasePage:
         return self.wait.until(read)
 
     def wait_url_contains(self, fragment):
-        self.wait.until(EC.url_contains(fragment))
+        self.wait.until(ec.url_contains(fragment))
 
     @staticmethod
     def field(label, tag="input"):

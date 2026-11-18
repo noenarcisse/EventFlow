@@ -26,7 +26,10 @@ def execute(sql, **params):
 def order_payment(order_id):
     """Montant de la commande vs montant reellement preleve."""
     rows = fetch_all(
-        f"SELECT o.total_cents, p.amount_cents FROM orders o "
-        f"JOIN payments p ON p.order_id = o.id WHERE o.id = {order_id}"
+        """--sql 
+            SELECT o.total_cents, p.amount_cents FROM orders o
+            JOIN payments p ON p.order_id = o.id WHERE o.id = :nom
+        """, 
+        nom=order_id
     )
     return rows[0] if rows else None

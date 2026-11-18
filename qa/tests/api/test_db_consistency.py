@@ -1,5 +1,5 @@
 """Controles de coherence directement en base (necessite le PostgreSQL du docker compose)."""
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -38,7 +38,7 @@ def test_expired_reservation_releases_stock(new_client_api, anonymous_api, qa_ev
 
     db.execute(
         "UPDATE orders SET expires_at = :past WHERE id = :id",
-        past=datetime.utcnow() - timedelta(minutes=1), id=order["id"],
+        past=datetime.now(tz=UTC) - timedelta(minutes=1), id=order["id"],
     )
 
     assert available() == initial, "Le stock n'est pas libere apres expiration (B5)"
