@@ -1,6 +1,6 @@
 """Petit client HTTP pour l'API EventFlow."""
 import requests
-from qa.utils.constants import TIMEOUT
+from constants import TIMEOUT
 
 from utils.config import API_URL
 

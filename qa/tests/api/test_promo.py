@@ -1,7 +1,7 @@
 import time
 
 import requests
-from qa.utils.constants import TIMEOUT
+from utils.constants import TIMEOUT
 
 URL = "http://localhost:8000"
 
