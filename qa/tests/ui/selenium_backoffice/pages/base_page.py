@@ -57,7 +57,7 @@ class BasePage:
         def read(driver):
             try:
                 elements = driver.find_elements(*locator)
-                values = [(e.find_element(By.CSS_SELecTOR, child_css) if child_css else e).text for e in elements]
+                values = [(e.find_element(By.CSS_SELECTOR, child_css) if child_css else e).text for e in elements]
                 return values or False
             except (StaleElementReferenceException, NoSuchElementException):
                 return False
