@@ -1,6 +1,8 @@
 import time
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import WebDriverWait
 
 from .base_page import BasePage
 
@@ -18,7 +20,11 @@ class DashboardPage(BasePage):
         return self.text_of(self.TITLE)
 
     def metric(self, label):
-        time.sleep(1)  # attendre que les stats soient chargees
+
+        wait = WebDriverWait(self.driver, timeout=10)
+        wait.until(ec.visibility_of_element_located(self.METRICS))
+        
+        # time.sleep(1)  # attendre que les stats soient chargees
         for m in self.find_all(self.METRICS):
             if m.find_element(By.CSS_SELECTOR, ".m-label").text == label:
                 return m.find_element(By.CSS_SELECTOR, ".m-value").text
