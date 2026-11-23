@@ -2,6 +2,7 @@
 import requests
 
 from utils.config import API_URL
+from utils.constants import TIMEOUT
 
 
 class ApiClient:
@@ -19,7 +20,7 @@ class ApiClient:
         r = requests.post(
             f"{self.base_url}/api/auth/token",
             data={"username": email, "password": password},
-            verify=False,
+            timeout=TIMEOUT
         )
         if r.status_code == 200:
             self.set_token(r.json()["access_token"])
