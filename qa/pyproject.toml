@@ -1,0 +1,40 @@
+[project]
+name = "qa"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "NoeN", email = "24297098+noenarcisse@users.noreply.github.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "allure-pytest>=2.16.2",
+    "bandit>=1.9.4",
+    "commitizen>=4.20.0",
+    "jsonschema>=4.26.0",
+    "pip-audit>=2.10.1",
+    "psycopg2-binary>=2.9.13",
+    "pyjwt>=2.15.1",
+    "pytest>=9.2.0",
+    "pytest-html>=4.2.0",
+    "pytest-playwright>=0.10.0",
+    "pytest-rerunfailures>=16.7",
+    "pytest-xdist>=3.8.0",
+    "python-dotenv>=1.2.4",
+    "requests==2.31.0",
+    "selenium>=4.53.0",
+    "sqlalchemy>=2.1.9",
+    "zizmor>=1.33.1",
+]
+
+[project.scripts]
+qa = "qa:main"
+
+[build-system]
+requires = ["uv_build>=0.13.9,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+perf = [
+    "locust>=2.28.0",
+]
