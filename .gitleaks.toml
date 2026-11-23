@@ -1,0 +1,9 @@
+[extend]
+  useDefault = true
+
+  [allowlist]
+  description = "dossiers generes, hors depot"
+  paths = [
+    '''(^|[/]).venv[/]''',
+    '''(^|[/])node_modules[/]''',
+  ]
