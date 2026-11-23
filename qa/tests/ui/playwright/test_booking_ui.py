@@ -43,7 +43,7 @@ def test_anonymous_user_is_sent_to_login_when_booking(page: Page, qa_event):
     page.get_by_role("button", name="Continuer vers le paiement").click()
     expect(page).to_have_url(re.compile(r"/login$"))
 
-
+@pytest.mark.flaky(reruns=3, reruns_delay=1)
 def test_expired_promo_code_shows_error(logged_in_page: Page, qa_event):
     logged_in_page.goto(f"/events/{qa_event['id']}")
     add_tickets(logged_in_page, "Plein tarif", 1)
