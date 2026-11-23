@@ -32,8 +32,10 @@ def test_rm4_promo_codes(new_client_api, qa_event, promo):
 def test_rm1_cannot_order_more_than_available_stock(new_client_api, anonymous_api, qa_event):
     detail = anonymous_api.get(f"/api/events/{qa_event['id']}").json()
     vip = category(detail, "VIP")
-    r = new_client_api.create_order(qa_event["id"], [{"category_id": vip["id"], "quantity": vip["available"] + 1}])
-    assert r.status_code == 409, f"Sur-reservation acceptee (B1) : {r.text}"
+    # breakpoint()
+    ret = new_client_api.create_order(qa_event["id"], [{"category_id": vip["id"], "quantity": vip["available"] + 1}])
+    # breakpoint()
+    assert ret.status_code == 409, f"Sur-reservation acceptee (B1) : {ret.text}"
 
 
 def test_pending_order_reserves_stock(new_client_api, anonymous_api, qa_event):
